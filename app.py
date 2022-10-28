@@ -3,7 +3,7 @@ from datetime import datetime
 
 DB_USERNAME = ""
 DB_PASSWORD = ""
-DB_LINK = f"mongodb+srv://{DB_USERNAME}:{DB_PASSWORD}@stephen-rhdevs.jvjmbup.mongodb.net/test"
+DB_LINK = ""
 
 URL = DB_LINK.format(
     DB_USERNAME, DB_PASSWORD)
@@ -23,7 +23,7 @@ def insertUserPurchase(details):   #details will be passed in JSON format
     new_con = { "$push": { 'orders': details['orderID']}}
     db.Users.update_one(filter_con, new_con)
 
-#sorry ass method 
+#sorry ass method (read)
 def retrieveFifthtoTenth():
     def get_amount(order):
         return order.get('amount')
@@ -39,7 +39,7 @@ def retrieveFifthtoTenth():
         print(f"{i+1}th largest transaction: {order_list[-i]}")  #laze to present properly
     return result
 
-
+#update
 def orderDisputes(date):
     new_con = { "$set": { 'status': "Dispute"}}
     req_date = datetime.strptime(date, '%d-%m-%y') 
@@ -50,6 +50,6 @@ def orderDisputes(date):
             filter_con = {"orderID": orders[i]['orderID']}
             db.Orders.update_one(filter_con, new_con)
 
-
+#delete
 def deleteOrder(orderID):
     db.Orders.delete_one({'orderID': orderID})
