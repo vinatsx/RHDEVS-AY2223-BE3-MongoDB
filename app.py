@@ -1,12 +1,9 @@
 # Create your own db.py with mongodb connection details, DO NOT commit that file
 # PM me on telegram your connection string, username and password
 
-from typing import List
-from venv import create
+import datetime
 
-from bson import ObjectId
 from db import db
-import test
 
 # Create
 
@@ -20,7 +17,7 @@ import test
 
 # Create new order 
 def create_new_order(data): 
-    return_result = db.orders.insert_one(data)
+    db.orders.insert_one(data)
 # test_data =  {
 #             "amount" : float(10),
 #             "userID": test.user_id, 
@@ -31,7 +28,7 @@ def create_new_order(data):
 
 # Read
 def get_transactions(): 
-    # Return all orders in the db (won't work if db is huge)
+    # Return all orders in the db
     top_ten_orders = db.orders.find({}).sort("amount", -1).limit(10)
     filtered_orders = top_ten_orders[4: 10]
     # for object in filtered_orders:
@@ -41,10 +38,17 @@ def get_transactions():
 # get_transactions()
 
 # Update
+def updateOrders(date):
+    req_date = datetime.strptime(date, '%d-%m-%y') 
+    length = db.orders.count_documents({})
+    all_orders = db.orders.find()
+    for i in range(0, length):
+        if all_orders[i]['date'] > req_date:
+            db.orders.update_one({"_id": all_orders[i]['_id']}, { "$set": { 'status': "Dispute"}})
 
 # Delete
 def delete_corresponding_orders(id): 
-    returnResult = db.orders.delete_many({"_id": id})
+    db.orders.delete_many({"_id": id})
 
-delete_corresponding_orders(test.order_id)
+# delete_corresponding_orders(test.order_id)
 #
